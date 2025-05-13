@@ -9,8 +9,8 @@ import (
 	"net/url"
 	"strings"
 
-	"dynamic-link-service/api/model"
-	"dynamic-link-service/config"
+	"dynamic-link-redirect/api/model"
+	"dynamic-link-redirect/config"
 
 	"github.com/rs/zerolog/log"
 )

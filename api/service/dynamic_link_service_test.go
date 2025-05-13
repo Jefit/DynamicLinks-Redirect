@@ -5,7 +5,7 @@ import (
 	"net/url"
 	"testing"
 
-	"dynamic-link-service/config"
+	"dynamic-link-redirect/config"
 )
 
 func TestIsPreviewHost(t *testing.T) {

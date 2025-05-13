@@ -3,8 +3,8 @@ package api
 import (
 	"net/http"
 
-	"dynamic-link-service/api/service"
-	"dynamic-link-service/config"
+	"dynamic-link-redirect/api/service"
+	"dynamic-link-redirect/config"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"

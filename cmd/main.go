@@ -2,8 +2,8 @@ package main
 
 import (
 	"context"
-	"dynamic-link-service/api"
-	"dynamic-link-service/config"
+	"dynamic-link-redirect/api"
+	"dynamic-link-redirect/config"
 	"fmt"
 	"net/http"
 	"os"

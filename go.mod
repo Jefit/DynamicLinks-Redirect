@@ -1,4 +1,4 @@
-module dynamic-link-service
+module dynamic-link-redirect
 
 go 1.22.5
 

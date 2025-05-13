@@ -7,9 +7,9 @@ import (
 	"net/url"
 	"strings"
 
-	"dynamic-link-service/api/service"
-	"dynamic-link-service/config"
-	"dynamic-link-service/utils"
+	"dynamic-link-redirect/api/service"
+	"dynamic-link-redirect/config"
+	"dynamic-link-redirect/utils"
 
 	"github.com/rs/zerolog/log"
 )
