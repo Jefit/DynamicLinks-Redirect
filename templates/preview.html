@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>{{if .SocialTitle}}{{.SocialTitle}}{{else}}Open in App{{end}}</title>
+
+    {{if .SocialTitle}}
+    <meta property="og:title" content="{{.SocialTitle}}" />
+    <meta name="twitter:title" content="{{.SocialTitle}}" />
+    {{end}}
+    {{if .SocialDescription}}
+    <meta property="og:description" content="{{.SocialDescription}}" />
+    <meta name="twitter:description" content="{{.SocialDescription}}" />
+    {{end}}
+    {{if .SocialImageLink}}
+    <meta property="og:image" content="{{.SocialImageLink}}" />
+    <meta name="twitter:image" content="{{.SocialImageLink}}" />
+    {{end}}
+
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <title>Open in app?</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Helvetica, Arial, sans-serif;
+        background-color: #f9fafb;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #111827;
+      }
+
+      .container {
+        width: 80%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 2rem;
+        border-radius: 1rem;
+        margin: auto;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+
+      @media (min-width: 480px) {
+        .container {
+          max-width: 420px;
+        }
+      }
+
+      .headline {
+        font-size: 1.75rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        text-align: center;
+      }
+
+      .app-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: 20%;
+        background: #e5e7eb;
+        margin-bottom: 0.75rem;
+        object-fit: cover;
+      }
+
+      .app-name {
+        font-weight: 600;
+        font-size: 1.2rem;
+        margin-bottom: 1.5rem;
+        text-align: center;
+      }
+
+      .info-box {
+        width: 100%;
+        background: #f3f4f6;
+        border: 1px solid #e5e7eb;
+        border-radius: 0.75rem;
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .headline {
+        margin-bottom: 3rem;
+      }
+
+      .app-icon {
+        margin-bottom: 1rem;
+      }
+
+      .app-name {
+        margin-bottom: 3rem;
+      }
+
+      .info-box {
+        margin-bottom: 3rem;
+      }
+
+      .cta-button {
+        margin-bottom: 1rem;
+      }
+
+      .info-item {
+        display: flex;
+        align-items: center;
+        font-size: 0.95rem;
+        color: #374151;
+      }
+
+      .info-item input[type="checkbox"] {
+        width: 20px;
+        height: 20px;
+        margin-right: 0.75rem;
+        accent-color: #0070f3;
+        cursor: pointer;
+      }
+
+      .cta-button {
+        width: 100%;
+        background: #0070f3;
+        color: white;
+        text-decoration: none;
+        padding: 1rem;
+        border-radius: 9999px;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: background 0.3s;
+        text-align: center;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1rem;
+        box-shadow: 0 4px 14px rgba(0, 118, 255, 0.25);
+      }
+
+      .cta-button:hover {
+        background: #0059c1;
+      }
+
+      #btn-copied {
+        color: #22c55e;
+        font-weight: bold;
+        font-size: 0.95rem;
+        margin-top: 0.5rem;
+        display: none;
+        text-align: center;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="headline">Open link in app?</div>
+      {{if .AppIconImageURL}}
+      <img id="app-icon" class="app-icon" src="{{.AppIconImageURL}}" alt="App Icon" />
+      {{else}}
+      <img id="app-icon" class="app-icon" src="" alt="App Icon" style="display: none;" />
+      {{end}}
+      {{if .AppName}}
+      <div id="app-name" class="app-name">{{.AppName}}</div>
+      {{else}}
+      <div id="app-name" class="app-name" style="display: none;">Loading...</div>
+      {{end}}
+
+      <div
+        id="social-preview"
+        style="
+          display: none;
+          width: 100%;
+          text-align: center;
+          margin-bottom: 2rem;
+        "
+      ></div>
+
+      <div class="info-box">
+        <div class="info-item">
+          <input type="checkbox" id="copy-checkbox" checked />
+          <label for="copy-checkbox"
+            >Save my place in the app. A link will be copied to continue to this
+            page.</label
+          >
+        </div>
+      </div>
+
+      <a href="{{.DynamicLink}}" id="btn-app" class="cta-button"> OPEN </a>
+
+      <p id="btn-copied">Link copied! Opening the app...</p>
+    </div>
+  </body>
+
+  <script>
+    window.onload = function () {
+      const button = document.getElementById("btn-app");
+      const copiedMessage = document.getElementById("btn-copied");
+
+      button.onclick = function (event) {
+        event.preventDefault();
+        const universalLink = button.href;
+        const copyCheckbox = document.getElementById("copy-checkbox");
+
+        if (copyCheckbox.checked) {
+          // Copy to clipboard
+          const copyInput = document.createElement("textarea");
+          copyInput.value = universalLink;
+          copyInput.style.position = "fixed";
+          copyInput.style.opacity = "0";
+          document.body.appendChild(copyInput);
+          copyInput.focus();
+          copyInput.select();
+          document.execCommand("copy");
+          document.body.removeChild(copyInput);
+
+          // Show copied message
+          copiedMessage.style.display = "block";
+        }
+
+        // Redirect (whether or not we copied)
+        setTimeout(() => {
+          window.location = universalLink;
+        }, 700);
+      };
+
+      const hasAnyContent = {{if .SocialDescription}}"{{.SocialDescription}}" !== ""{{else}}false{{end}} || 
+                           {{if .SocialTitle}}"{{.SocialTitle}}" !== ""{{else}}false{{end}} || 
+                           {{if .SocialImageLink}}"{{.SocialImageLink}}" !== ""{{else}}false{{end}};
+
+      if (hasAnyContent) {
+        const socialContainer = document.getElementById("social-preview");
+        socialContainer.style.display = "block";
+
+        {{if .SocialImageLink}}
+        const socialImageLink = "{{.SocialImageLink}}";
+        if (socialImageLink && socialImageLink !== "") {
+          const img = document.createElement("img");
+          img.src = socialImageLink;
+          img.alt = "Social Preview";
+          img.style.width = "100%";
+          img.style.maxWidth = "300px";
+          img.style.borderRadius = "12px";
+          img.style.marginBottom = "1rem";
+          socialContainer.appendChild(img);
+        }
+        {{end}}
+
+        {{if .SocialTitle}}
+        const socialTitle = "{{.SocialTitle}}";
+        if (socialTitle && socialTitle !== "") {
+          const title = document.createElement("div");
+          title.textContent = socialTitle;
+          title.style.fontWeight = "bold";
+          title.style.fontSize = "1.2rem";
+          title.style.marginBottom = "0.5rem";
+          socialContainer.appendChild(title);
+        }
+        {{end}}
+
+        {{if .SocialDescription}}
+        const socialDescription = "{{.SocialDescription}}";
+        if (socialDescription && socialDescription !== "") {
+          const description = document.createElement("div");
+          description.textContent = socialDescription;
+          description.style.fontSize = "0.95rem";
+          description.style.color = "#4B5563";
+          description.style.maxHeight = "4.5rem";
+          description.style.overflow = "hidden";
+          description.style.textOverflow = "ellipsis";
+          description.style.display = "-webkit-box";
+          description.style.webkitLineClamp = "3";
+          description.style.webkitBoxOrient = "vertical";
+          socialContainer.appendChild(description);
+        }
+        {{end}}
+      }
+    };
+  </script>
+</html>
