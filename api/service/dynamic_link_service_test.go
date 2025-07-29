@@ -20,7 +20,7 @@ func TestIsPreviewHost(t *testing.T) {
 		{
 			name:           "hyphenated style - valid preview host",
 			previewStyle:   "hyphenated",
-			host:           "myapp-preview.example.com",
+			host:           "preview-myapp.example.com",
 			expectedResult: true,
 			expectError:    false,
 		},
@@ -41,7 +41,7 @@ func TestIsPreviewHost(t *testing.T) {
 		{
 			name:           "hyphenated style - preview in wrong position",
 			previewStyle:   "hyphenated",
-			host:           "preview-myapp.example.com",
+			host:           "myapp-preview.example.com",
 			expectedResult: false,
 			expectError:    false,
 		},
@@ -134,14 +134,14 @@ func TestGeneratePreviewURL(t *testing.T) {
 			name:         "hyphenated style - simple domain",
 			previewStyle: "hyphenated",
 			originalURL:  "http://myapp.example.com",
-			expectedURL:  "http://myapp-preview.example.com",
+			expectedURL:  "http://preview-myapp.example.com",
 			expectError:  false,
 		},
 		{
 			name:         "hyphenated style - with path and query",
 			previewStyle: "hyphenated",
 			originalURL:  "https://myapp.example.com/path?query=value",
-			expectedURL:  "https://myapp-preview.example.com/path?query=value",
+			expectedURL:  "https://preview-myapp.example.com/path?query=value",
 			expectError:  false,
 		},
 
@@ -231,7 +231,7 @@ func TestGetNonPreviewHost(t *testing.T) {
 		{
 			name:         "hyphenated style - valid preview host",
 			previewStyle: "hyphenated",
-			host:         "myapp-preview.example.com",
+			host:         "preview-myapp.example.com",
 			expectedHost: "myapp.example.com",
 			expectError:  false,
 		},

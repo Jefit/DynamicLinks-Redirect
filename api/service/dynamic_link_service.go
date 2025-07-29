@@ -73,8 +73,8 @@ func (s *DynamicLinkService) GetNonPreviewHost(host string) (string, error) {
 			return host, nil
 		}
 		subdomain := hostParts[0]
-		if strings.HasSuffix(subdomain, "-preview") {
-			cleanSubdomain := strings.TrimSuffix(subdomain, "-preview")
+		if strings.HasPrefix(subdomain, "preview-") {
+			cleanSubdomain := strings.TrimPrefix(subdomain, "preview-")
 			return cleanSubdomain + "." + hostParts[1], nil
 		}
 		return host, nil
@@ -113,7 +113,7 @@ func (s *DynamicLinkService) IsPreviewHost(r *http.Request) (bool, error) {
 			return false, nil
 		}
 		subdomain := hostParts[0]
-		if strings.HasSuffix(subdomain, "-preview") {
+		if strings.HasPrefix(subdomain, "preview-") {
 			log.Debug().Str("subdomain", subdomain).Msg("Preview host detected (hyphenated style)")
 			return true, nil
 		}
@@ -151,7 +151,7 @@ func (s *DynamicLinkService) GeneratePreviewURL(originalURL *url.URL) (*url.URL,
 
 	switch s.config.PreviewUrlStyle {
 	case "hyphenated":
-		hostParts[0] = hostParts[0] + "-preview"
+		hostParts[0] = "preview-" + hostParts[0]
 	case "subdomain":
 		hostParts = append([]string{"preview"}, hostParts...)
 	default:
