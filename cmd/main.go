@@ -37,9 +37,17 @@ func main() {
 	}
 
 	go func() {
-		log.Info().Msgf("Server starting on port %s", cfg.Port)
-		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			log.Fatal().Err(err).Msg("Server failed to start")
+
+		if cfg.SSLEnabled == "true" {
+			log.Info().Msgf("Server starting on port %s, cert %s, cert key %s", cfg.Port, cfg.SSLCertPath, cfg.SSLKeyPath)
+			if err := server.ListenAndServeTLS(cfg.SSLCertPath, cfg.SSLKeyPath); err != nil && err != http.ErrServerClosed {
+				log.Fatal().Err(err).Msg("Server failed to start")
+			}
+		} else {
+			log.Info().Msgf("Server starting on port %s", cfg.Port)
+			if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+				log.Fatal().Err(err).Msg("Server failed to start")
+			}
 		}
 	}()
 
