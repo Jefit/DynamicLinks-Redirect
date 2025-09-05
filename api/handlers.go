@@ -271,7 +271,8 @@ func handleAndroidDynamicLink(w http.ResponseWriter, r *http.Request, queryParam
 	appPackageName := queryParams.Get("apn")
 	if appPackageName != "" {
 		dynamicLink.RawQuery = ""
-		redirectURL := fmt.Sprintf("https://play.google.com/store/apps/details?id=%s&referrer=tracking_id%%3D%s", appPackageName, dynamicLink)
+		encodedLink := url.QueryEscape(dynamicLink.String())
+		redirectURL := fmt.Sprintf("https://play.google.com/store/apps/details?id=%s&referrer=tracking_id%%3D%s", appPackageName, encodedLink)
 		log.Debug().Str("redirectURL", redirectURL).Msg("Redirecting to Play Store")
 		http.Redirect(w, r, redirectURL, http.StatusTemporaryRedirect)
 		return
