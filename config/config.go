@@ -13,7 +13,7 @@ type Config struct {
 	SSLEnabled                string
 	SSLCertPath               string
 	SSLKeyPath                string
-	EnableFallback            bool
+	EnableFallback            string
 	FallbackHost              string
 }
 
@@ -27,8 +27,8 @@ func New() *Config {
 		SSLEnabled:                getEnv("SSL_ENABLED", "false"),
 		SSLCertPath:               getEnv("SSL_CERT_PATH", "./tls.crt"),
 		SSLKeyPath:                getEnv("SSL_KEY_PATH", "./tls.key"),
-		EnableFallback:            getEnv("ENABLE_FALLBACK", false),
-		FallbackHost:              getEnv("FALLBACK_HOST", "")
+		EnableFallback:            getEnv("ENABLE_FALLBACK", "false"),
+		FallbackHost:              getEnv("FALLBACK_HOST", ""),
 	}
 }
 
