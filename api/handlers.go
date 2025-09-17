@@ -288,6 +288,12 @@ func domainFallbackRedirect(cfg *config.Config) http.HandlerFunc {
 	defaultScheme := "https"
 
 	return func(w http.ResponseWriter, r *http.Request) {
+        log.Debug().
+            Str("method", r.Method).
+            Str("host", r.Host).
+            Str("path", r.URL.Path).
+            Str("query", r.URL.RawQuery).
+            Msg("Fallback redirect triggered")
 		if r.Method == http.MethodOptions {
 			w.WriteHeader(http.StatusNoContent)
 			return
@@ -299,6 +305,10 @@ func domainFallbackRedirect(cfg *config.Config) http.HandlerFunc {
 			Path:     r.URL.EscapedPath(),
 			RawQuery: r.URL.RawQuery,
 		}
+
+		log.Debug().
+			Str("target", target.String()).
+			Msg("Redirecting to fallback host")
 
 		http.Redirect(w, r, target.String(), http.StatusPermanentRedirect)
 	}
