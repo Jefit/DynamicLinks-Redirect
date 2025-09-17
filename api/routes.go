@@ -59,5 +59,9 @@ func NewRouter(cfg *config.Config) *chi.Mux {
 	fs := http.FileServer(http.Dir("static"))
 	r.Handle("/static/*", http.StripPrefix("/static/", fs))
 
+    if cfg.EnableFallback && cfg.FallbackHost != "" {
+        r.NotFound(domainFallbackRedirect(cfg))
+    }
+
 	return r
 }

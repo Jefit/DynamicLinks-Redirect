@@ -282,3 +282,24 @@ func (h *DynamicLinkHandler) AppleAppSiteAssociation(w http.ResponseWriter, r *h
 	log.Info().Msg("Processing Apple App Site Association request")
 	http.ServeFile(w, r, "static/apple-app-site-association.json")
 }
+
+func domainFallbackRedirect(cfg *config.Config) http.HandlerFunc {
+	fallbackHost := strings.TrimSpace(cfg.FallbackHost)
+	defaultScheme := "https"
+
+	return func(w http.ResponseWriter, r *http.Request) {
+		if r.Method == http.MethodOptions {
+			w.WriteHeader(http.StatusNoContent)
+			return
+		}
+
+		target := url.URL{
+			Scheme:   defaultScheme,
+			Host:     fallbackHost,
+			Path:     r.URL.EscapedPath(),
+			RawQuery: r.URL.RawQuery,
+		}
+
+		http.Redirect(w, r, target.String(), http.StatusPermanentRedirect)
+	}
+}
