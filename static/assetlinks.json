@@ -5,9 +5,11 @@
         ],
         "target": {
             "namespace": "android_app",
-            "package_name": "com.your.application",
+            "package_name": "je.fit",
             "sha256_cert_fingerprints": [
-                "XX:60:87:B1:XX:70:51:XX:66:XX:XX:27:XX:38:7D:XX:7A:XX:F3:DB:B0:31:17:94:XX:XX:1A:E2:B6:XX:14:XX"
+                "45:6C:D4:67:DE:F8:59:0C:77:F7:2A:F2:CA:7B:12:C1:5C:66:86:3B:2E:2B:80:56:43:88:21:F0:20:55:99:CC",
+                "6A:78:D6:86:51:60:11:51:77:AA:97:9C:88:3E:2C:36:8C:93:BC:B1:73:E6:1F:E2:E6:81:F6:12:D0:76:8F:DB",
+                "53:ED:89:A2:16:70:6D:BA:59:39:FB:8E:94:27:7D:48:74:93:27:5C:78:60:C2:AD:04:86:6A:12:21:D6:BE:E1"
             ]
         }
     }
