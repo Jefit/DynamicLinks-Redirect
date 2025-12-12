@@ -51,7 +51,19 @@ func (h *DynamicLinkHandler) HandleRedirect(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	if isPreview && requestQueryParams.Get("from-preview") != "true" {
+	userAgent := r.Header.Get("User-Agent")
+	isiPad := strings.Contains(userAgent, "iPad")
+	isiPhone := strings.Contains(userAgent, "iPhone")
+	isIos := isiPad || isiPhone
+	isAndroid := strings.Contains(userAgent, "Android")
+
+	// Check if fallback parameters are present for the current platform - skip preview if so
+	hasAFL := dynamicLinkQueryParams.Get("afl") != ""
+	hasIFL := dynamicLinkQueryParams.Get("ifl") != ""
+	hasIPFL := dynamicLinkQueryParams.Get("ipfl") != ""
+	skipPreview := (hasAFL && isAndroid) || (hasIFL && isiPhone) || (hasIPFL && isiPad)
+
+	if isPreview && requestQueryParams.Get("from-preview") != "true" && !skipPreview {
 		urlCopy := utils.FullRequestURL(r)
 		newHost, err := h.service.GetNonPreviewHost(urlCopy.Host)
 		if err != nil {
@@ -71,22 +83,16 @@ func (h *DynamicLinkHandler) HandleRedirect(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	userAgent := r.Header.Get("User-Agent")
-	isiPad := strings.Contains(userAgent, "iPad")
-	isiPhone := strings.Contains(userAgent, "iPhone")
-	isIos := isiPad || isiPhone
-	isAndroid := strings.Contains(userAgent, "Android")
-
 	if isIos {
 		log.Debug().Msg("Handling iOS User Agent")
-		fullURL := utils.FullRequestURL(r)
-		previewURL, err := h.service.GeneratePreviewURL(fullURL)
-		if err != nil {
-			log.Error().Err(err).Msg("Failed to transform to preview URL")
-			http.Error(w, "Invalid long link format", http.StatusInternalServerError)
-			return
-		}
-		if requestQueryParams.Get("from-preview") != "true" {
+		if requestQueryParams.Get("from-preview") != "true" && !skipPreview {
+			fullURL := utils.FullRequestURL(r)
+			previewURL, err := h.service.GeneratePreviewURL(fullURL)
+			if err != nil {
+				log.Error().Err(err).Msg("Failed to transform to preview URL")
+				http.Error(w, "Invalid long link format", http.StatusInternalServerError)
+				return
+			}
 			log.Debug().Str("previewURL", previewURL.String()).Msg("Redirecting to preview URL")
 			http.Redirect(w, r, previewURL.String(), http.StatusFound)
 		} else {
@@ -95,14 +101,14 @@ func (h *DynamicLinkHandler) HandleRedirect(w http.ResponseWriter, r *http.Reque
 		return
 	} else if isAndroid {
 		log.Debug().Msg("Handling Android User Agent")
-		fullURL := utils.FullRequestURL(r)
-		previewURL, err := h.service.GeneratePreviewURL(fullURL)
-		if err != nil {
-			log.Error().Err(err).Msg("Failed to transform to preview URL")
-			http.Error(w, "Invalid long link format", http.StatusInternalServerError)
-			return
-		}
-		if requestQueryParams.Get("from-preview") != "true" {
+		if requestQueryParams.Get("from-preview") != "true" && !skipPreview {
+			fullURL := utils.FullRequestURL(r)
+			previewURL, err := h.service.GeneratePreviewURL(fullURL)
+			if err != nil {
+				log.Error().Err(err).Msg("Failed to transform to preview URL")
+				http.Error(w, "Invalid long link format", http.StatusInternalServerError)
+				return
+			}
 			log.Debug().Str("previewURL", previewURL.String()).Msg("Redirecting to preview URL")
 			http.Redirect(w, r, previewURL.String(), http.StatusFound)
 		} else {
